@@ -25,12 +25,9 @@
 - [Ekran Görüntüleri](#-ekran-görüntüleri)
 - [Teknoloji Yığını](#️-teknoloji-yığını)
 - [Proje Yapısı](#-proje-yapısı)
-- [Kurulum](#-kurulum)
-- [Çalıştırma](#-çalıştırma)
 - [API Referansı](#-api-referansı)
 - [Güvenlik ve Gizlilik](#-güvenlik-ve-gizlilik)
 - [Bilinen Kısıtlamalar](#-bilinen-kısıtlamalar)
-- [Katkıda Bulunma](#-katkıda-bulunma)
 - [Lisans](#-lisans)
 
 ---
@@ -253,65 +250,6 @@ lib/
 
 ---
 
-## 🚀 Kurulum
-
-### Gereksinimler
-
-- Flutter SDK **≥ 3.0.0** — [flutter.dev/docs/get-started/install](https://flutter.dev/docs/get-started/install)
-- Dart SDK **≥ 3.0.0** (Flutter ile birlikte gelir)
-- iOS geliştirme için **Xcode ≥ 14** ve CocoaPods
-- Android geliştirme için **Android Studio** ve SDK Tools
-- Ücretsiz bir **TMDB API anahtarı** — [themoviedb.org/settings/api](https://www.themoviedb.org/settings/api)
-
-### Adımlar
-
-```bash
-# 1. Repoyu klonla
-git clone https://github.com/kullanici-adin/tvmovies_app.git
-cd tvmovies_app/tmdb_app
-
-# 2. Bağımlılıkları yükle
-flutter pub get
-
-# 3. iOS için pod kurulumu (yalnızca macOS)
-cd ios && pod install && cd ..
-```
-
----
-
-## ▶️ Çalıştırma
-
-API anahtarını **hiçbir zaman kaynak koda yazmayın**. `--dart-define` ile build zamanında geçin:
-
-```bash
-# Debug modda çalıştır
-flutter run --dart-define=TMDB_API_KEY=BURAYA_ANAHTARINIZI_YAZIN
-
-# Release APK (Android)
-flutter build apk --release --dart-define=TMDB_API_KEY=BURAYA_ANAHTARINIZI_YAZIN
-
-# Release IPA (iOS)
-flutter build ios --release --dart-define=TMDB_API_KEY=BURAYA_ANAHTARINIZI_YAZIN
-```
-
-### Kolaylık için yardımcı script
-
-Proje kökünde `run.sh` oluşturun ve `.gitignore`'a ekleyin:
-
-```bash
-#!/bin/bash
-# run.sh — Bu dosyayı ASLA commit etmeyin!
-flutter run --dart-define=TMDB_API_KEY=BURAYA_ANAHTARINIZI_YAZIN "$@"
-```
-
-```bash
-chmod +x run.sh
-./run.sh            # debug
-./run.sh --release  # release
-```
-
----
-
 ## 🌐 API Referansı
 
 Uygulama [TMDB API v3](https://developer.themoviedb.org/docs) kullanmaktadır. Tüm istekler `tr-TR` dil parametresiyle gönderilir. Türkçe içerik yoksa İngilizce endpoint'e fallback yapılır.
@@ -366,54 +304,6 @@ Uygulama [TMDB API v3](https://developer.themoviedb.org/docs) kullanmaktadır. T
 | Sabit kodlanmış parola veya token  | ✅ Yok                                                             |
 | `debugPrint` production sızıntısı  | ✅ Release modda otomatik olarak no-op'tur                         |
 
-### ⚠️ Dikkat edilmesi gereken noktalar
-
-#### 1. API Anahtarı Derlenmiş Binary İçinde Kalır
-
-`String.fromEnvironment('TMDB_API_KEY')` anahtarı kaynak koddan gizler ancak derlenmiş `.apk` / `.ipa` dosyasından özel araçlarla çıkarılabilir. Bu, istemci taraflı API entegrasyonlarında kabul edilen bir risk dengesidir. Daha yüksek güvenlik gerekiyorsa TMDB isteklerini kendi backend sunucunuz üzerinden proxy'leyin.
-
-#### 2. Gayri Resmi Google Translate Kullanımı
-
-`translator` paketi, anahtar gerektirmeyen **belgelenmemiş, gayri resmi** bir Google Translate endpoint'i kullanır. Bu durum Google Hizmet Şartları'nı ihlal edebilir ve herhangi bir anda kesilebilir.
-
-**Öneri:** Resmi [Cloud Translation API](https://cloud.google.com/translate) ile değiştirin veya biyografi çevirisini sessiz `catch` bloğuyla isteğe bağlı bırakın.
-
-#### 3. Zorunlu `.gitignore` Yapılandırması
-
-```gitignore
-# Gizli çalıştırma scriptleri
-run.sh
-*.env
-.env*
-
-# Flutter / Dart
-.dart_tool/
-build/
-*.g.dart
-*.freezed.dart
-
-# IDE
-.idea/
-.vscode/
-*.iml
-.DS_Store
-
-# iOS
-ios/Pods/
-ios/.symlinks/
-
-# Android
-android/.gradle/
-android/local.properties
-android/key.properties
-```
-
-#### 4. Base64 Görsel Depolaması
-
-Kullanıcının seçtiği özel posterler `SharedPreferences`'a base64 string olarak yazılır. Büyük görseller depolama alanını artırır ve serileştirmeyi yavaşlatır.
-
-**Öneri:** Görselleri `path_provider` ile dosya sistemine kaydedin, preferences'a yalnızca yolu saklayın.
-
 ---
 
 ## ⚠️ Bilinen Kısıtlamalar
@@ -440,24 +330,6 @@ Kullanıcının seçtiği özel posterler `SharedPreferences`'a base64 string ol
 
 ---
 
-## 🤝 Katkıda Bulunma
-
-1. Bu repoyu fork edin
-2. Yeni bir dal oluşturun: `git checkout -b ozellik/yeni-ozellik`
-3. Değişikliklerinizi commit edin: `git commit -m 'feat: yeni özellik eklendi'`
-4. Dalınızı push edin: `git push origin ozellik/yeni-ozellik`
-5. Pull Request açın
-
----
-
 ## 📄 Lisans
 
 Bu proje kişisel / eğitim amaçlıdır. İçerikler ve görseller [TMDB](https://www.themoviedb.org) tarafından sağlanmaktadır. Bu ürün TMDB API'sini kullanmaktadır ancak TMDB tarafından onaylanmamış veya sertifikalandırılmamıştır.
-
----
-
-## 🙏 Teşekkürler
-
-- [The Movie Database (TMDB)](https://www.themoviedb.org) — ücretsiz ve kapsamlı API için
-- [Flutter](https://flutter.dev) ekibi — harika çerçeve için
-- `pubspec.yaml` dosyasında listelenen tüm açık kaynak paket yazarları
